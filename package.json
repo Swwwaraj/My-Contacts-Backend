@@ -1,0 +1,29 @@
+{
+  "name": "mycontact-backend-api",
+  "version": "1.0.0",
+  "description": "This is express project for my contacts backend api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Swwwaraj/My-Contacts-Backend.git"
+  },
+  "author": "Swaraj Zavare",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Swwwaraj/My-Contacts-Backend/issues"
+  },
+  "homepage": "https://github.com/Swwwaraj/My-Contacts-Backend#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.9"
+  }
+}
