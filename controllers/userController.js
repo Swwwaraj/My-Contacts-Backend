@@ -55,11 +55,11 @@ const loginUser = asyncHandler(async (req,res) => {
                 id: user.id, 
             },
         }, process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: "1m"}
+        {expiresIn: "15m"}
     );
         res.status(200).json({accessToken});
     }else {
-        res.status(401)
+        res.status(401);
         throw new Error("email or passwors is not valid");
     }
 
@@ -69,7 +69,7 @@ const loginUser = asyncHandler(async (req,res) => {
 //@Roure Post /api/users/current
 //@Access Private
 const currentUser = asyncHandler(async (req,res) => {
-    res.json({ message: "Current user information"});
+    res.json(req.user);
 });
 
 module.exports = {registerUser,loginUser,currentUser};

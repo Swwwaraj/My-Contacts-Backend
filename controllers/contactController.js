@@ -2,15 +2,15 @@ const asyncHandler = require("express-async-handler");
 const Contact = require("../models/contactModel");
 //@Desc Get all contacts
 //@Roure GET /api/contacts
-//@Access Public
+//@Access Private
 const getContact = asyncHandler(async(req, res) => {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({ user_id: req.user_id });
     res.status(200).json(contacts);
 });
 
 //@Desc Create New contact
 //@Roure POST /api/contacts
-//@Access Public
+//@Access Private
 const createContact = asyncHandler(async(req, res) => {
     console.log("The request body is :", req.body);
     const {name, email, phone} = req.body;
@@ -23,13 +23,14 @@ const createContact = asyncHandler(async(req, res) => {
         name,
         email,
         phone,
+        user_id:req.user.id
     });
     res.status(201).json(contact);
 });
 
 //@Desc Get contact
 //@Roure GET /api/contacts/:id
-//@Access Public
+//@Access Private
 const getContacts = asyncHandler(async(req, res) => {
     const contact = await Contact.findById(req.params.id);
     if (!contact){
@@ -41,13 +42,18 @@ const getContacts = asyncHandler(async(req, res) => {
 
 //@Desc update the contact
 //@Roure UPDATE /api/contacts/:id
-//@Access Public
+//@Access Private
 const updateContact = asyncHandler(async(req, res) => {
     const contact = await Contact.findById(req.params.id);
     if (!contact){
         res.status(404);
         throw new Error ("Contact not found");
-    };
+    }
+
+    if(contact.user_id.toString() !== req.user.id) {
+        res.status(403);
+        throw new Error("User can't have permission to update other user contacts");
+    }
     const updatedContact = await Contact.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -59,14 +65,20 @@ const updateContact = asyncHandler(async(req, res) => {
 
 //@Desc Delete the contact
 //@Roure DELETE /api/contacts/:id
-//@Access Public
+//@Access Private
 const deleteContact = asyncHandler(async(req, res) => {
     const contact = await Contact.findById(req.params.id);
     if (!contact){
         res.status(404);
         throw new Error ("Contact not found");
     }
-    await contact.remove();
+
+    if(contact.user_id.toString() !== req.user.id) {
+        res.status(403);
+        throw new Error("User can't have permission to update other user contacts");
+    }
+
+    await Contact.deleteOne({_id: req.params.id});
     res.status(200).json(contact); // Corrected template literal
 });
 
